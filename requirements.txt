@@ -1,0 +1,5 @@
+Flask==3.0.3
+PyMySql==1.2.0
+fpdf2>=2.8.1
+gunicorn==26.2.0
+

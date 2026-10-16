@@ -1,0 +1,31 @@
+{% extends "dashboard/base2.html" %}
+{% block title %}AssetMate | Reportes{% endblock %}
+{% block content %}
+<div class="modern-page-header"><div><div class="eyebrow">Análisis del taller</div><h1>Reportes</h1><p>Consulta los movimientos del taller por fechas y descárgalos en PDF. Cada reporte generado queda registrado en la base de datos.</p></div></div>
+
+<div class="modern-panel mb-4">
+    <div class="modern-panel-title"><div class="title-icon"><i class="bi bi-calendar-range"></i></div><div><h2>Periodo del reporte</h2><small>Se incluyen los préstamos solicitados o devueltos dentro del rango.</small></div></div>
+    <form method="get" action="{{ url_for('reportes_modulo.reportes') }}" class="report-filter">
+        <div><label class="modern-label" for="desde">Desde</label><input type="date" id="desde" name="desde" class="modern-input" value="{{ reporte.desde.isoformat() }}" required></div>
+        <div><label class="modern-label" for="hasta">Hasta</label><input type="date" id="hasta" name="hasta" class="modern-input" value="{{ reporte.hasta.isoformat() }}" required></div>
+        <button type="submit" class="modern-submit"><i class="bi bi-funnel me-1"></i> Consultar</button>
+        <a class="action-btn" href="{{ url_for('reportes_modulo.reportes', desde=mes_actual[0].isoformat(), hasta=mes_actual[1].isoformat()) }}">Este mes</a>
+        <a class="action-btn" href="{{ url_for('reportes_modulo.reportes', desde=mes_anterior[0].isoformat(), hasta=mes_anterior[1].isoformat()) }}">Mes anterior</a>
+        <a class="modern-submit text-decoration-none" href="{{ url_for('reportes_modulo.reporte_pdf', desde=reporte.desde.isoformat(), hasta=reporte.hasta.isoformat()) }}"><i class="bi bi-file-earmark-pdf me-1"></i> Descargar PDF</a>
+    </form>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="modern-panel"><div class="eyebrow">Herramientas activas</div><h2>{{ reporte.herramientas }}</h2></div></div>
+    <div class="col-md-4"><div class="modern-panel"><div class="eyebrow">Estudiantes activos</div><h2>{{ reporte.estudiantes }}</h2></div></div>
+    <div class="col-md-4"><div class="modern-panel"><div class="eyebrow">Solicitudes del periodo</div><h2>{{ reporte.prestamos }}</h2></div></div>
+</div>
+
+<div class="modern-panel mb-4"><div class="modern-panel-title"><div class="title-icon"><i class="bi bi-pie-chart"></i></div><div><h2>Solicitudes por estado</h2><small>{{ reporte.desde.strftime('%d/%m/%Y') }} al {{ reporte.hasta.strftime('%d/%m/%Y') }}</small></div></div><div class="table-responsive"><table class="table modern-table text-center"><thead><tr><th>Estado</th><th>Cantidad</th></tr></thead><tbody>{% for e in reporte.estados %}<tr><td>{{ e.estado_solicitud }}</td><td>{{ e.total }}</td></tr>{% endfor %}</tbody></table></div></div>
+
+<div class="modern-panel mb-4"><div class="modern-panel-title"><div class="title-icon"><i class="bi bi-tools"></i></div><div><h2>Uso por herramienta</h2><small>Solicitudes registradas y aprobadas por elemento en el periodo.</small></div></div><div class="table-responsive"><table class="table modern-table text-center"><thead><tr><th>Herramienta</th><th>Solicitudes</th><th>Aprobadas</th></tr></thead><tbody>{% for h in reporte.por_herramienta if h.solicitudes %}<tr><td>{{ h.herramienta }}</td><td>{{ h.solicitudes or 0 }}</td><td>{{ h.aprobados or 0 }}</td></tr>{% else %}<tr><td colspan="3">Sin movimientos en este periodo.</td></tr>{% endfor %}</tbody></table></div></div>
+
+<div class="modern-panel mb-4"><div class="modern-panel-title"><div class="title-icon"><i class="bi bi-clock-history"></i></div><div><h2>Movimientos del periodo</h2><small>Hasta 500 registros.</small></div></div><div class="table-responsive"><table class="table modern-table text-center"><thead><tr><th>ID</th><th>Estudiante</th><th>Herramienta</th><th>Solicitud</th><th>Devolución</th><th>Estado</th></tr></thead><tbody>{% for p in reporte.recientes %}<tr><td>{{ p.id_prestamo }}</td><td>{{ p.estudiante }}</td><td>{{ p.herramienta }}</td><td>{{ p.fecha_entrega or '—' }}</td><td>{{ p.fecha_devolucion or '—' }}</td><td>{{ p.estado_solicitud }}</td></tr>{% else %}<tr><td colspan="6">Sin movimientos.</td></tr>{% endfor %}</tbody></table></div></div>
+
+<div class="modern-panel"><div class="modern-panel-title"><div class="title-icon"><i class="bi bi-archive"></i></div><div><h2>Reportes generados</h2><small>Historial guardado en la base de datos (últimos 15).</small></div></div><div class="table-responsive"><table class="table modern-table text-center"><thead><tr><th>No.</th><th>Generado</th><th>Periodo</th><th>Por</th><th>Solicitudes</th><th>PDF</th></tr></thead><tbody>{% for r in historial %}<tr><td>{{ r.id_reporte }}</td><td>{{ r.fecha_generacion.strftime('%d/%m/%Y %H:%M') }}</td><td>{{ r.fecha_desde.strftime('%d/%m/%Y') }} – {{ r.fecha_hasta.strftime('%d/%m/%Y') }}</td><td>{{ r.admin or '—' }}</td><td>{{ r.total_solicitudes }}</td><td><a class="action-btn" href="{{ url_for('reportes_modulo.reporte_pdf', id=r.id_reporte) }}"><i class="bi bi-download"></i> Descargar</a></td></tr>{% else %}<tr><td colspan="6" class="py-4" style="color:var(--muted)">Aún no se ha generado ningún reporte.</td></tr>{% endfor %}</tbody></table></div></div>
+{% endblock %}

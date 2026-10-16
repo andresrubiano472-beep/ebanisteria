@@ -1,0 +1,71 @@
+{% extends "dashboard/base2.html" %}
+{% block title %}AssetMate | Estudiantes{% endblock %}
+
+{% block content %}
+<div class="modern-page-header">
+    <div>
+        <div class="eyebrow">Gestión académica</div>
+        <h1>Estudiantes</h1>
+        <p>Consulta, edita o quita a los estudiantes registrados en el sistema.</p>
+    </div>
+    <div class="status-badge"><i class="bi bi-people me-1"></i> {{ lista|length }} registros</div>
+</div>
+
+<form method="get" action="{{ url_for('ver_estudiantes') }}" class="search-bar">
+    <input type="search" name="q" value="{{ busqueda }}" class="modern-input" placeholder="Buscar por nombre, documento o correo...">
+    <button type="submit" class="modern-submit"><i class="bi bi-search me-1"></i> Buscar</button>
+    {% if busqueda %}<a href="{{ url_for('ver_estudiantes') }}" class="action-btn">Limpiar</a>{% endif %}
+</form>
+
+<div class="student-grid">
+    {% for estudiante in lista %}
+    <article class="student-card" {% if estudiante.estado != 'activo' %}style="opacity:.6"{% endif %}>
+        <img src="{{ url_for('static', filename='img/estudiantes.webp') }}" alt="Estudiante">
+        <div class="student-card-body">
+            <h3>{{ estudiante.NombreCompleto }}
+                {% if estudiante.estado != 'activo' %}<span class="status-badge ms-1">Inactivo</span>{% endif %}
+            </h3>
+            <div class="student-info">
+                <span>Identificación</span>
+                <strong>{{ estudiante.documento }}</strong>
+            </div>
+            <div class="student-info">
+                <span>Grado</span>
+                <strong>{{ estudiante.grado }}</strong>
+            </div>
+            <div class="student-info">
+                <span>Correo</span>
+                <strong>{{ estudiante.email }}</strong>
+            </div>
+            <div class="mt-3 d-flex gap-2 flex-wrap">
+                <a href="{{ url_for('editar_estudiante', id_usuario=estudiante.id_usuario) }}" class="action-btn">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
+                {% if estudiante.estado == 'activo' %}
+                <form method="post" action="{{ url_for('estado_estudiante', id_usuario=estudiante.id_usuario) }}"
+                      onsubmit="return confirm('¿Quitar a este estudiante? Ya no podrá iniciar sesión (su historial se conserva).');">
+                    {{ csrf_input }}
+                    <input type="hidden" name="accion" value="quitar">
+                    <button type="submit" class="action-btn danger"><i class="bi bi-person-dash"></i> Quitar</button>
+                </form>
+                {% else %}
+                <form method="post" action="{{ url_for('estado_estudiante', id_usuario=estudiante.id_usuario) }}">
+                    {{ csrf_input }}
+                    <input type="hidden" name="accion" value="reactivar">
+                    <button type="submit" class="action-btn"><i class="bi bi-person-check"></i> Reactivar</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+    {% else %}
+    <div class="modern-panel">
+        <div class="text-center py-4">
+            <div class="module-icon mx-auto mb-3"><i class="bi bi-people"></i></div>
+            <h3 class="h6 fw-bold">No hay estudiantes {% if busqueda %}que coincidan con la búsqueda{% else %}registrados{% endif %}</h3>
+            <p class="small mb-0" style="color:var(--muted)">Cuando existan registros aparecerán aquí.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "Base.html" %}
+{% block content %}
+<section class="landing-hero">
+    <video class="landing-video" autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='img/video.mp4') }}" type="video/mp4">
+    </video>
+    <div class="landing-overlay"></div>
+
+    <div class="landing-content">
+        <span class="landing-kicker"><span></span> Sistema de inventario ITIPISTA</span>
+        <h1>El taller,<br><strong>más organizado.</strong></h1>
+        <p>Consulta herramientas, administra préstamos y mantén el inventario del taller de ebanistería bajo control desde un solo lugar.</p>
+        <div class="landing-actions">
+            <a href="/Login" class="modern-btn modern-btn-primary"><i class="bi bi-box-arrow-in-right"></i> Entrar al panel</a>
+            <a href="/Register" class="modern-btn modern-btn-outline"><i class="bi bi-person-plus"></i> Crear cuenta</a>
+            <a href="/disponibilidad" class="modern-btn modern-btn-outline"><i class="bi bi-search"></i> Ver disponibilidad</a>
+        </div>
+
+        <div class="landing-features">
+            <div><i class="bi bi-tools"></i><span>Inventario</span></div>
+            <div><i class="bi bi-people"></i><span>Estudiantes</span></div>
+            <div><i class="bi bi-clipboard-check"></i><span>Préstamos</span></div>
+        </div>
+    </div>
+
+    <div class="landing-scroll"><i class="bi bi-arrow-down"></i><span>Explora el sistema</span></div>
+</section>
+
+{% endblock %}

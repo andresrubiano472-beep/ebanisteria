@@ -1,0 +1,117 @@
+{% extends "dashboard/base2.html" %}
+{% block title %}AssetMate | Herramientas{% endblock %}
+
+{% block content %}
+<div class="modern-page-header">
+    <div>
+        <div class="eyebrow">Inventario</div>
+        <h1>Herramientas</h1>
+        <p>Registra, consulta y administra las herramientas del taller.</p>
+    </div>
+    <div class="status-badge"><i class="bi bi-box-seam me-1"></i> {{ total_registros }} registros</div>
+</div>
+
+<div class="modern-panel mb-4">
+    <div class="modern-panel-title">
+        <div class="title-icon"><i class="bi bi-plus-lg"></i></div>
+        <div>
+            <h2>Registrar herramienta</h2>
+            <small>Completa los datos para agregar un nuevo elemento al inventario.</small>
+        </div>
+    </div>
+
+    <form action="{{ url_for('agregar_herramienta') }}" method="POST">
+        {{ csrf_input }}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="modern-label">Nombre</label>
+                <input type="text" name="nombre" class="modern-input" placeholder="Ej. Martillo" required>
+            </div>
+
+            <div class="col-md-6">
+                <label class="modern-label">Tipo</label>
+                <input type="text" name="tipo" class="modern-input" placeholder="Ej. Manual" required>
+            </div>
+
+            <div class="col-md-6">
+                <label class="modern-label">Cantidad</label>
+                <input type="number" name="cantidad" class="modern-input" min="0" placeholder="0" required>
+            </div>
+
+            <div class="col-md-6">
+                <label class="modern-label">Estado</label>
+                <select name="estado" class="modern-select">
+                    <option value="Disponible">Disponible</option>
+                    <option value="Prestado">Prestado</option>
+                    <option value="Dañado">Dañado</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="modern-label">Descripción</label>
+                <textarea name="descripcion" class="modern-textarea" placeholder="Añade una descripción opcional..."></textarea>
+            </div>
+
+            <div class="col-12 col-md-4 ms-auto">
+                <button type="submit" class="modern-submit">
+                    <i class="bi bi-check2-circle me-1"></i> Guardar herramienta
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modern-panel">
+    <div class="modern-panel-title">
+        <div class="title-icon"><i class="bi bi-list-ul"></i></div>
+        <div>
+            <h2>Lista de herramientas</h2>
+            <small>Inventario actual del taller.</small>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table modern-table text-center">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for herramienta in herramientas %}
+                <tr>
+                    <td>{{ herramienta.id_herramienta }}</td>
+                    <td class="fw-semibold">{{ herramienta.nombre }}</td>
+                    <td>{{ herramienta.tipo }}</td>
+                    <td>{{ herramienta.cantidad }}</td>
+                    <td><span class="status-badge">{{ herramienta.estado }}</span></td>
+                    <td>{{ herramienta.descripcion }}</td>
+                    <td class="text-nowrap">
+                        <a href="{{ url_for('editar_herramienta', id_herramienta=herramienta.id_herramienta) }}" class="action-btn">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <form method="post" action="{{ url_for('eliminar_herramienta', id_herramienta=herramienta.id_herramienta) }}" class="d-inline"
+                              onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta herramienta?');">
+                            {{ csrf_input }}
+                            <button type="submit" class="action-btn danger"><i class="bi bi-trash"></i> Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center py-5" style="color:var(--muted)">
+                        No hay herramientas registradas.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "Base.html" %}
+{% block content %}
+<section style="width:min(1100px, calc(100% - 36px)); margin:34px auto;">
+    <div class="modern-page-header">
+        <div>
+            <div class="eyebrow">Consulta pública</div>
+            <h1>Disponibilidad de herramientas</h1>
+            <p>Busca una herramienta y mira si hay unidades disponibles. No necesitas iniciar sesión; para solicitar un préstamo sí.</p>
+        </div>
+        <div class="status-badge"><i class="bi bi-box-seam me-1"></i> {{ herramientas|length }} resultados</div>
+    </div>
+
+    <form method="get" action="{{ url_for('prestamos_modulo.disponibilidad') }}" class="search-bar">
+        <input type="search" name="q" value="{{ q }}" class="modern-input" placeholder="Buscar por nombre, tipo o descripción..." autofocus>
+        <label class="search-check"><input type="checkbox" name="solo_disponibles" value="1" {% if solo_disponibles %}checked{% endif %}> Solo disponibles</label>
+        <button type="submit" class="modern-submit"><i class="bi bi-search me-1"></i> Buscar</button>
+    </form>
+
+    <div class="modern-panel">
+        <div class="table-responsive">
+            <table class="table modern-table text-center">
+                <thead><tr><th>Herramienta</th><th>Tipo</th><th>Descripción</th><th>Unidades</th><th>Disponibilidad</th></tr></thead>
+                <tbody>
+                {% for h in herramientas %}
+                <tr>
+                    <td class="fw-semibold">{{ h.nombre }}</td>
+                    <td>{{ h.tipo or '—' }}</td>
+                    <td>{{ h.descripcion or '—' }}</td>
+                    <td>{{ h.cantidad or 0 }}</td>
+                    <td>
+                        {% if h.disponible %}<span class="status-badge">Disponible</span>
+                        {% elif h.estado|lower in ['dañado','danado'] %}<span class="status-badge badge-off">Fuera de servicio</span>
+                        {% else %}<span class="status-badge badge-off">Agotada</span>{% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="py-5" style="color:var(--muted)">No se encontraron herramientas{% if q %} para «{{ q }}»{% endif %}.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <p class="small mt-3 mb-0" style="color:var(--muted)">¿Quieres solicitar una? <a href="/Login">Inicia sesión</a> o <a href="/Register">crea tu cuenta</a>.</p>
+    </div>
+</section>
+{% endblock %}

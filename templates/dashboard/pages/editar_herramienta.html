@@ -1,0 +1,49 @@
+{% extends "dashboard/base2.html" %}
+{% block title %}AssetMate | Editar herramienta{% endblock %}
+
+{% block content %}
+<div class="modern-page-header">
+    <div>
+        <div class="eyebrow">Inventario</div>
+        <h1>Editar herramienta</h1>
+        <p>Actualiza los datos de «{{ herramienta.nombre }}».</p>
+    </div>
+</div>
+
+<div class="modern-panel">
+    <form action="{{ url_for('actualizar_herramienta') }}" method="POST">
+        {{ csrf_input }}
+        <input type="hidden" name="id" value="{{ herramienta.id_herramienta }}">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="modern-label">Nombre</label>
+                <input type="text" name="nombre" class="modern-input" value="{{ herramienta.nombre }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="modern-label">Tipo</label>
+                <input type="text" name="tipo" class="modern-input" value="{{ herramienta.tipo or '' }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="modern-label">Cantidad</label>
+                <input type="number" name="cantidad" class="modern-input" min="0" value="{{ herramienta.cantidad or 0 }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="modern-label">Estado</label>
+                <select name="estado" class="modern-select">
+                    {% for e in ['Disponible', 'Prestado', 'Dañado'] %}
+                    <option value="{{ e }}" {% if herramienta.estado == e %}selected{% endif %}>{{ e }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="modern-label">Descripción</label>
+                <textarea name="descripcion" class="modern-textarea">{{ herramienta.descripcion or '' }}</textarea>
+            </div>
+            <div class="col-12 d-flex gap-2 justify-content-end">
+                <a href="{{ url_for('mostrar_herramientas_dashboard') }}" class="action-btn">Cancelar</a>
+                <button type="submit" class="modern-submit" style="width:auto"><i class="bi bi-check2-circle me-1"></i> Guardar cambios</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

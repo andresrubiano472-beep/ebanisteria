@@ -1,0 +1,69 @@
+{% extends "Base.html" %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #f7f7f7, #ececec); 
+    position: relative;
+    min-height: 100vh;
+    overflow-y: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("{{ url_for('static', filename='img/Fondo.png')}}" ) no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.6;
+    z-index: -1; 
+  }
+
+  .login-box {
+    background-color: #1e1e1e;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+</style>
+<!--Texto superior dentro del banner Formulario-->
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="login-box col-12 col-md-6 col-lg-4">
+    <h2 class="text-center fw-bold mb-3" style="color: coral;">Acceso</h2>
+    <p class="text-center text-muted">Por favor ingresa tus credenciales</p>
+<!--Campo Inicio Sesion-->
+    <form action="/login" method="POST">
+      {{ csrf_input }}
+      <div class="mb-3">
+        <label for="email" class="form-label fw-bold">Correo</label>
+        <input type="text" name="usuario" class="form-control" id="email" placeholder="Ingresa tu correo" required>
+      </div>
+<!--Campo Contraseña-->
+      <div class="mb-3">
+        <label for="password" class="form-label fw-bold">Contraseña</label>
+        <input type="password" name="contraseña" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
+      </div>
+<!--Campo ¿Olvidaste tu contraseña?-->
+      <div class="d-flex justify-content-between mb-3">
+        <a href="/disponibilidad">Consultar disponibilidad de herramientas</a>
+      </div>
+<!--Boton de Logeo-->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-dark fw-bold">Login</button>
+      </div>
+<!--Redireccion a la pagina de regristro en caso tal de no tener cuenta-->
+      <div class="mt-3 text-center">
+        <p class="text-muted">¿No tienes cuenta? <a href="/Register">Regístrate</a></p>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

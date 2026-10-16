@@ -1,0 +1,58 @@
+{% extends "dashboard/base2.html" %}
+{% block title %}AssetMate | Inicio{% endblock %}
+
+{% block content %}
+<section class="dashboard-hero">
+    <video autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='img/video.mp4') }}" type="video/mp4">
+    </video>
+
+    <div class="hero-content">
+        <span class="status-pill">
+            <span class="status-dot"></span>
+            Sistema activo
+        </span>
+
+        <h1>Bienvenido al<br><span>Panel Administrativo</span></h1>
+
+        <p>
+            Gestiona y consulta el inventario del taller de ebanistería
+            desde un espacio más simple, rápido y organizado.
+        </p>
+
+        <div class="hero-actions">
+            <a href="/herramientas" class="modern-btn modern-btn-primary">
+                <i class="bi bi-tools"></i> Ver herramientas
+            </a>
+            <a href="/prestamos" class="modern-btn modern-btn-outline">
+                <i class="bi bi-plus-circle"></i> Nuevo préstamo
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="dashboard-modules">
+    <a href="/estudiantes" class="module-card">
+        <div class="module-icon"><i class="bi bi-people"></i></div>
+        <h3>Estudiantes</h3>
+        <p>Consulta y administra la información de los estudiantes registrados.</p>
+    </a>
+
+    <a href="/herramientas" class="module-card">
+        <div class="module-icon"><i class="bi bi-tools"></i></div>
+        <h3>Herramientas</h3>
+        <p>Controla cantidades, estados, tipos y descripciones del inventario.</p>
+    </a>
+
+    <a href="/prestamos" class="module-card">
+        <div class="module-icon"><i class="bi bi-clipboard-check"></i></div>
+        <h3>Préstamos</h3>
+        <p>Accede rápidamente al módulo de préstamos del taller.</p>
+    </a>
+    <a href="/reportes" class="module-card">
+        <div class="module-icon"><i class="bi bi-bar-chart-line"></i></div>
+        <h3>Reportes</h3>
+        <p>Genera reportes en PDF por rango de fechas.</p>
+    </a>
+</section>
+{% endblock %}

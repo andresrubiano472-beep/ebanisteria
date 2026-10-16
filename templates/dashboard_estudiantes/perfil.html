@@ -1,0 +1,55 @@
+{% extends "dashboard_estudiantes/base3.html" %}
+{% block title %}AssetMate | Mi perfil{% endblock %}
+{% block content %}
+<div class="modern-page-header"><div><div class="eyebrow">Mi cuenta</div><h1>Mi perfil</h1><p>Actualiza tus datos personales y tu contraseña.</p></div></div>
+
+<div class="modern-panel mb-4">
+    <div class="modern-panel-title"><div class="title-icon"><i class="bi bi-person"></i></div><div><h2>Datos personales</h2><small>Tu documento solo puede cambiarlo el administrador.</small></div></div>
+    <form action="{{ url_for('actualizar_perfil_estudiante') }}" method="POST">
+        {{ csrf_input }}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="modern-label">Nombre completo</label>
+                <input type="text" name="nombre" class="modern-input" value="{{ alumno.NombreCompleto }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="modern-label">Documento</label>
+                <input type="text" class="modern-input" value="{{ alumno.documento }}" disabled>
+            </div>
+            <div class="col-md-6">
+                <label class="modern-label">Correo</label>
+                <input type="email" name="email" class="modern-input" value="{{ alumno.email }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="modern-label">Grado</label>
+                <select name="grado" class="modern-select">
+                    {% if alumno.grado not in grados|map(attribute=0) %}
+                    <option value="{{ alumno.grado }}" selected>{{ alumno.grado }} (sin definir)</option>
+                    {% endif %}
+                    {% for valor, nombre in grados %}
+                    <option value="{{ valor }}" {% if alumno.grado == valor %}selected{% endif %}>{{ nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-4 ms-auto">
+                <button type="submit" class="modern-submit"><i class="bi bi-check2-circle me-1"></i> Guardar datos</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modern-panel">
+    <div class="modern-panel-title"><div class="title-icon"><i class="bi bi-key"></i></div><div><h2>Cambiar contraseña</h2><small>Necesitas tu contraseña actual para confirmar el cambio.</small></div></div>
+    <form action="{{ url_for('cambiar_password_estudiante') }}" method="POST">
+        {{ csrf_input }}
+        <div class="row g-3">
+            <div class="col-md-4"><label class="modern-label">Contraseña actual</label><input type="password" name="actual" class="modern-input" required></div>
+            <div class="col-md-4"><label class="modern-label">Nueva contraseña</label><input type="password" name="nueva" class="modern-input" minlength="4" required></div>
+            <div class="col-md-4"><label class="modern-label">Confirmar nueva</label><input type="password" name="confirmar" class="modern-input" minlength="4" required></div>
+            <div class="col-12 col-md-4 ms-auto">
+                <button type="submit" class="modern-submit"><i class="bi bi-shield-lock me-1"></i> Actualizar contraseña</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

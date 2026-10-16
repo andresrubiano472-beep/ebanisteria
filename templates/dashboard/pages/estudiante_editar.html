@@ -1,0 +1,47 @@
+{% extends "dashboard/base2.html" %}
+{% block title %}AssetMate | Editar estudiante{% endblock %}
+
+{% block content %}
+<div class="modern-page-header">
+    <div>
+        <div class="eyebrow">Gestión académica</div>
+        <h1>Editar estudiante</h1>
+        <p>Modifica los datos de {{ alumno.NombreCompleto }}.</p>
+    </div>
+</div>
+
+<div class="modern-panel">
+    <form action="{{ url_for('actualizar_estudiante', id_usuario=alumno.id_usuario) }}" method="POST">
+        {{ csrf_input }}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="modern-label">Nombre completo</label>
+                <input type="text" name="nombre" class="modern-input" value="{{ alumno.NombreCompleto }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="modern-label">Documento</label>
+                <input type="text" name="documento" class="modern-input" value="{{ alumno.documento }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="modern-label">Correo</label>
+                <input type="email" name="email" class="modern-input" value="{{ alumno.email }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="modern-label">Grado</label>
+                <select name="grado" class="modern-select">
+                    {% if alumno.grado not in grados|map(attribute=0) %}
+                    <option value="{{ alumno.grado }}" selected>{{ alumno.grado }} (sin definir)</option>
+                    {% endif %}
+                    {% for valor, nombre in grados %}
+                    <option value="{{ valor }}" {% if alumno.grado == valor %}selected{% endif %}>{{ nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 d-flex gap-2 justify-content-end">
+                <a href="{{ url_for('ver_estudiantes') }}" class="action-btn">Cancelar</a>
+                <button type="submit" class="modern-submit" style="width:auto"><i class="bi bi-check2-circle me-1"></i> Guardar cambios</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

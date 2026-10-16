@@ -1,0 +1,6 @@
+{% extends "dashboard_estudiantes/base3.html" %}
+{% block title %}AssetMate Mis préstamos{% endblock %}
+{% block content %}
+<div class="modern-page-header"><div><div class="eyebrow">Mi actividad</div><h1>Mis solicitudes</h1><p>Consulta el estado de las solicitudes de herramientas que has enviado.</p></div></div>
+<div class="modern-panel"><div class="table-responsive"><table class="table modern-table text-center"><thead><tr><th>ID</th><th>Herramienta</th><th>Fecha de solicitud</th><th>Fecha de devolución</th><th>Estado</th></tr></thead><tbody>{% for p in prestamos %}<tr><td>{{ p.id_prestamo }}</td><td class="fw-semibold">{{ p.herramienta }}</td><td>{{ p.fecha_entrega or '—' }}</td><td>{{ p.fecha_devolucion or '—' }}</td><td><span class="status-badge">{{ p.estado_solicitud }}</span></td></tr>{% else %}<tr><td colspan="5" class="py-5" style="color:var(--muted)">Aún no has enviado solicitudes.</td></tr>{% endfor %}</tbody></table></div></div>
+{% endblock %}

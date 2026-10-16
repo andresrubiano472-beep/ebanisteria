@@ -1,0 +1,22 @@
+{% extends "dashboard_estudiantes/base3.html" %}
+{% block title %}AssetMate | Inicio{% endblock %}
+{% block content %}
+<div class="modern-page-header"><div><div class="eyebrow">Panel del estudiante</div><h1>Hola, {{ session.get('nombre', 'estudiante') }}</h1><p>Consulta las herramientas del taller, solicita préstamos y revisa tus solicitudes.</p></div></div>
+<section class="dashboard-modules">
+    <a href="/ver_herramientas_estudiantes" class="module-card">
+        <div class="module-icon"><i class="bi bi-tools"></i></div>
+        <h3>Herramientas</h3>
+        <p>Mira qué hay disponible y envía tu solicitud.</p>
+    </a>
+    <a href="/ver_prestamos" class="module-card">
+        <div class="module-icon"><i class="bi bi-clipboard-check"></i></div>
+        <h3>Mis préstamos</h3>
+        <p>Revisa el estado de tus solicitudes y devoluciones.</p>
+    </a>
+    <a href="/perfil" class="module-card">
+        <div class="module-icon"><i class="bi bi-person-circle"></i></div>
+        <h3>Mi perfil</h3>
+        <p>Edita tus datos personales y tu contraseña.</p>
+    </a>
+</section>
+{% endblock %}

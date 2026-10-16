@@ -1,0 +1,58 @@
+{% extends "dashboard_estudiantes/base3.html" %}
+{% block title %}AssetMate | Solicitar herramientas{% endblock %}
+{% block content %}
+  <div class="modern-page-header">
+    <div>
+      <div class="eyebrow">Inventario del taller</div>
+      <h1>Herramientas disponibles</h1>
+      <p>Envía una solicitud; el préstamo solo será efectivo cuando el administrador lo apruebe.</p>
+    </div>
+  </div>
+
+  <div class="modern-panel">
+    <div class="table-responsive">
+      <table class="table modern-table text-center">
+        <thead>
+          <tr>
+            <th>Herramienta</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Unidades disponibles</th>
+            <th>Estado</th>
+            <th>Solicitud</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in herramientas %}
+            <tr>
+              <td class="fw-semibold">{{ h.nombre }}</td>
+              <td>{{ h.tipo }}</td>
+              <td>{{ h.descripcion or '—' }}</td>
+              <td>{{ h.cantidad }}</td>
+              <td>
+                <span class="status-badge">{{ h.estado }}</span>
+              </td>
+              <td>
+                {% if h.disponible %}
+                  <form method="post" action="{{ url_for('prestamos_modulo.solicitar_prestamo') }}">
+                    {{ csrf_input }}
+                    <input type="hidden" name="id_herramienta" value="{{ h.id_herramienta }}">
+                    <button type="submit" class="modern-submit">
+                      <i class="bi bi-send me-1"></i>Solicitar préstamo
+                    </button>
+                  </form>
+                {% else %}
+                  <span style="color:var(--muted)">No disponible</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6" class="py-5" style="color:var(--muted)">No hay herramientas registradas.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
